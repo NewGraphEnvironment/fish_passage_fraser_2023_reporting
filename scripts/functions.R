@@ -255,3 +255,86 @@ lfpr_structure_size_type <- function(
                        na = '')
 
 }
+
+
+
+#' Get, store, and update watershed areas in bcfishpass.sqlite
+#' @param gnis_names vector of string gnis stream names
+#' @param coll string (quoted) name of collection in fresh water atlas, defaults to "whse_basemapping.fwa_stream_networks_sp
+#' @param update boolean FALSE if its the first time adding to watershed areas, TRUE if you want to update the existing watershed areas in the database. Defaults to FALSE.
+#'
+#' @importFrom dplyr mutate tibble group_by pull
+#' @importFrom fwapgr fwa_query_collection fwa_watershed_at_measure
+#' @importFrom readwritesqlite rws_connect rws_list_tables rws_write rws_read_table rws_drop_table
+#' @importFrom chk chk_numeric chk_flag
+#' @importFrom DBI dbDisconnect
+#'
+#' @export
+#'
+#' #' @examples \dontrun{
+#' fpr_get_wshd_area(c("Chilako River"), update = FALSE)
+#' }
+#'
+
+
+tfpr_get_wshd_area <- function(
+    gnis_names = NULL,
+    coll = "whse_basemapping.fwa_stream_networks_sp",
+    update = FALSE)
+{
+
+  chk::chk_vector(gnis_names)
+  chk::chk_flag(update)
+
+
+  if(update == FALSE){
+
+  # Get list of blue line codes and watershed areas and add to tibble
+  stream_info <- tibble(gnis_name = gnis_names) %>%
+    group_by(gnis_name) %>%
+    mutate(
+      blue_line_key = fwapgr::fwa_query_collection(coll, limit = 1, filter = list(gnis_name = gnis_name)) %>%
+        pull(blue_line_key),
+      wshd_area = fwapgr::fwa_watershed_at_measure(blue_line_key) %>%
+        pull(area_ha),
+      wshd_area = floor(wshd_area / 100),  # Round down to the nearest integer,
+      wshd_area = ifelse(wshd_area >= 1000, format(wshd_area, big.mark = ",", scientific = FALSE), as.character(wshd_area))
+    )
+
+  # add tibble to bcfishpass.sqlite
+  conn <- readwritesqlite::rws_connect("data/bcfishpass.sqlite")
+  # readwritesqlite::rws_list_tables(conn) ## List tables in the database
+  readwritesqlite::rws_write(stream_info, exists = FALSE, conn = conn)
+  DBI::dbDisconnect(conn)
+
+  }
+
+
+  if(update == TRUE){
+
+    # get existing stream_info table from bcfishpass.sqlite
+    conn <- readwritesqlite::rws_connect("data/bcfishpass.sqlite")
+    stream_info <- readwritesqlite::rws_read_table("stream_info", conn = conn)
+
+    # Get list of blue line codes and watershed areas
+    stream_info %>%
+      group_by(gnis_name) %>%
+      mutate(
+        blue_line_key = fwapgr::fwa_query_collection(coll, limit = 1, filter = list(gnis_name = gnis_name)) %>%
+          pull(blue_line_key),
+        wshd_area = fwapgr::fwa_watershed_at_measure(blue_line_key) %>%
+          pull(area_ha),
+        wshd_area = floor(wshd_area / 100),  # Round down to the nearest integer,
+        wshd_area = ifelse(wshd_area >= 1000, format(wshd_area, big.mark = ",", scientific = FALSE), as.character(wshd_area))
+      )
+
+    # re-burn tibble to bcfishpass.sqlite
+    readwritesqlite::rws_drop_table("stream_info", conn = conn) # drop the table so you can replace it
+    readwritesqlite::rws_write(stream_info, exists = FALSE, conn = conn) # write the new table
+    DBI::dbDisconnect(conn)
+  }
+
+
+}
+
+
