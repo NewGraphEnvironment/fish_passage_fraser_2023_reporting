@@ -6,9 +6,27 @@
 knitr::include_graphics("fig/nge-icon_name.png")
 ```
 
+
 ## Nechako River
 
-The Nechako River is an 8th order stream that drains an area of `r fwapgr::fwa_watershed_at_measure(356362759) %>% mutate(area_km2 = round(area_ha/100, 1)) %>% mutate(area_km2 = ifelse(area_km2 >= 1000, format(area_km2, big.mark = ",", scientific = FALSE), area_km2)) %>% pull(area_km2)` km^2^. Beginning at the Nechako Plateau, it flows north towards Fort Fraser then east to its confluence with the Fraser River in Prince George. The Nachako River has three main tributaries: the Stuart River, the Endako River, and the Chilako River. It has a mean annual discharge of `r round(fasstr::calc_longterm_mean(station_number = "08JC001")$LTMAD,1)` m^3^/s at station 08JC001 located in Vanderhoof and `r round(fasstr::calc_longterm_mean(station_number = "08JC002")$LTMAD,1)` m^3^/s at station 08JC002 located in Isle Pierre, \~25km downstream of the Stuart River confluence. Flow patterns at Isle Pierre are heavily influenced by inflows from the Stuart River (enters downstream of Vanderhoof) resulting in higher peak levels and average discharge (Figures \@ref(fig:hydrology-plots) - \@ref(fig:hydrology-stats2)). The hygrograph at station 08JC001 in Vanderhoof peaks in June and August, with lower peak levels and average discharge (Figures \@ref(fig:hydrology-plots) - \@ref(fig:hydrology-stats1)).
+```{r get-wshd-areas, eval = identical(wshd_area_update, FALSE)}
+## Uncomment this code if you want to pull watershed areas for the first time
+# wshds <- c("Nechako River", "Endako River", "Chilako River")
+# tfpr_get_wshd_area(wshds, update = FALSE)
+```
+
+```{r update-wshd-areas, eval = identical(wshd_area_update, TRUE)}
+tfpr_get_wshd_area(update = TRUE)
+```
+
+```{r load-wshd-areas}
+# Pull watershed area data from bcfishpass for background info.
+conn <- readwritesqlite::rws_connect("data/bcfishpass.sqlite")
+wshd_areas <- readwritesqlite::rws_read_table("stream_info", conn = conn)
+DBI::dbDisconnect(conn)
+```
+
+The Nechako River is an 8th order stream that drains an area of `r wshd_areas %>% filter(gnis_name == "Nechako River") %>% pull(wshd_area)` km^2^. Beginning at the Nechako Plateau, it flows north towards Fort Fraser then east to its confluence with the Fraser River in Prince George. The Nachako River has three main tributaries: the Stuart River, the Endako River, and the Chilako River. It has a mean annual discharge of `r round(fasstr::calc_longterm_mean(station_number = "08JC001")$LTMAD,1)` m^3^/s at station 08JC001 located in Vanderhoof and `r round(fasstr::calc_longterm_mean(station_number = "08JC002")$LTMAD,1)` m^3^/s at station 08JC002 located in Isle Pierre, \~25km downstream of the Stuart River confluence. Flow patterns at Isle Pierre are heavily influenced by inflows from the Stuart River (enters downstream of Vanderhoof) resulting in higher peak levels and average discharge (Figures \@ref(fig:hydrology-plots) - \@ref(fig:hydrology-stats2)). The hygrograph at station 08JC001 in Vanderhoof peaks in June and August, with lower peak levels and average discharge (Figures \@ref(fig:hydrology-plots) - \@ref(fig:hydrology-stats1)).
 
 
 ```{r, eval=FALSE}
@@ -27,12 +45,12 @@ hydat_stations %>%
 ```
 
 
-```{r, eval=TRUE}
+```{r, eval=F}
 # starting at 1948 because that's where consistent data starts
 lfpr_create_hydrograph("08JC001", start_year = 1948)
 ```
 
-```{r, eval=TRUE}
+```{r, eval=F}
 lfpr_create_hydrograph("08JC002")
 ```
 
@@ -53,7 +71,7 @@ knitr::include_graphics("fig/hydrology_stats_08JC002.png")
 
 ## Endako River
 
-The Endako River is a 6th order stream that flows south east from Burns Lake to Fraser Lake. It drains an area of `r fwapgr::fwa_watershed_at_measure(356361442) %>% mutate(area_km2 = round(area_ha/100, 1)) %>% mutate(area_km2 = ifelse(area_km2 >= 1000, format(area_km2, big.mark = ",", scientific = FALSE), area_km2)) %>% pull(area_km2)` km^2^. There is one hydrometric station on the Endako River located in Endako, but it was only active for one year during 1951. Given the one year of data, the mean annual discharge is `r round(fasstr::calc_longterm_mean(station_number = "08JB004")$LTMAD,1)` m^3^/s at station 08JB004. The hydrograph peaks in May-June (Figure \@ref(fig:hydrograph1)).
+The Endako River is a 6th order stream that flows south east from Burns Lake to Fraser Lake. It drains an area of `r wshd_areas %>% filter(gnis_name == "Endako River") %>% pull(wshd_area)` km^2^. There is one hydrometric station on the Endako River located in Endako, but it was only active for one year during 1951. Given the one year of data, the mean annual discharge is `r round(fasstr::calc_longterm_mean(station_number = "08JB004")$LTMAD,1)` m^3^/s at station 08JB004. The hydrograph peaks in May-June (Figure \@ref(fig:hydrograph1)).
 
 ```{r, eval=FALSE}
 lfpr_create_hydrograph("08JB004")
@@ -72,7 +90,7 @@ knitr::include_graphics("fig/hydrograph_08JB004.png")
 
 ## Chilako River
 
-The Chilako River is a 6th order stream that flows north from the Nechako Plateau to the Nechako River. It drains an area of `r fwapgr::fwa_watershed_at_measure(356363121) %>% mutate(area_km2 = round(area_ha/100, 1)) %>% mutate(area_km2 = ifelse(area_km2 >= 1000, format(area_km2, big.mark = ",", scientific = FALSE), area_km2)) %>% pull(area_km2)` km^2^. There is one hydrometric station on the Chilako River located ~10km upstream of the mouth, but it was only active from 1960-1974. Given this data, the hydrograph peaks in May-June (Figures \@ref(fig:hydrograph2) - \@ref(fig:hydrology-stats4)).
+The Chilako River is a 6th order stream that flows north from the Nechako Plateau to the Nechako River. It drains an area of `r wshd_areas %>% filter(gnis_name == "Chilako River") %>% pull(wshd_area)` km^2^. There is one hydrometric station on the Chilako River located ~10km upstream of the mouth, but it was only active from 1960-1974. Given this data, the hydrograph peaks in May-June (Figures \@ref(fig:hydrograph2) - \@ref(fig:hydrology-stats4)).
 
 ```{r, eval=FALSE}
 lfpr_create_hydrograph("08JC005")

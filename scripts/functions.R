@@ -258,7 +258,7 @@ lfpr_structure_size_type <- function(
 
 
 
-#' Get, store, and update watershed areas in bcfishpass.sqlite
+#' Get, store, and update watershed areas from fwapgr and store in bcfishpass.sqlite
 #' @param gnis_names vector of string gnis stream names
 #' @param coll string (quoted) name of collection in fresh water atlas, defaults to "whse_basemapping.fwa_stream_networks_sp
 #' @param update boolean FALSE if its the first time adding to watershed areas, TRUE if you want to update the existing watershed areas in the database. Defaults to FALSE.
@@ -290,13 +290,13 @@ tfpr_get_wshd_area <- function(
   if(update == FALSE){
 
   # Get list of blue line codes and watershed areas and add to tibble
-  stream_info <- tibble(gnis_name = gnis_names) %>%
-    group_by(gnis_name) %>%
-    mutate(
+  stream_info <- dplyr::tibble(gnis_name = gnis_names) %>%
+    dplyr::group_by(gnis_name) %>%
+    dplyr::mutate(
       blue_line_key = fwapgr::fwa_query_collection(coll, limit = 1, filter = list(gnis_name = gnis_name)) %>%
-        pull(blue_line_key),
+        dplyr::pull(blue_line_key),
       wshd_area = fwapgr::fwa_watershed_at_measure(blue_line_key) %>%
-        pull(area_ha),
+        dplyr::pull(area_ha),
       wshd_area = floor(wshd_area / 100),  # Round down to the nearest integer,
       wshd_area = ifelse(wshd_area >= 1000, format(wshd_area, big.mark = ",", scientific = FALSE), as.character(wshd_area))
     )
@@ -318,12 +318,12 @@ tfpr_get_wshd_area <- function(
 
     # Get list of blue line codes and watershed areas
     stream_info %>%
-      group_by(gnis_name) %>%
-      mutate(
+      dplyr::group_by(gnis_name) %>%
+      dplyr::mutate(
         blue_line_key = fwapgr::fwa_query_collection(coll, limit = 1, filter = list(gnis_name = gnis_name)) %>%
-          pull(blue_line_key),
+          dplyr::pull(blue_line_key),
         wshd_area = fwapgr::fwa_watershed_at_measure(blue_line_key) %>%
-          pull(area_ha),
+          dplyr::pull(area_ha),
         wshd_area = floor(wshd_area / 100),  # Round down to the nearest integer,
         wshd_area = ifelse(wshd_area >= 1000, format(wshd_area, big.mark = ",", scientific = FALSE), as.character(wshd_area))
       )
