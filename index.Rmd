@@ -56,6 +56,15 @@ photo_width <- "80%"
 font_set <- 9
 ```
 
+```{r settings-wshd-area-update}
+# Three options 
+# 1. Pulling watershed areas for the first time. Keep wshd_area_update <- FALSE and uncomment code in background/get-wshd-areas
+# 2. Watershed areas have already been pulled and you don't want to update. Keep wshd_area_update <- FALSE
+# 3. Watershed areas have already been pulled and you want to update. Change wshd_area_update <- TRUE
+wshd_area_update <- FALSE 
+# wshd_area_update <- TRUE
+
+```
 
 ```{r}
 source('scripts/packages.R')
