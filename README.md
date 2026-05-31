@@ -1,31 +1,33 @@
-Custom template for New Graph Environment Ltd. reporting
+# Restoring Fish Passage in the Fraser Region — 2023
 
-see `scripts/run.R`
+> Reproducible, web-first fish-passage restoration-planning report for the Fraser Region, prepared on behalf of the Skeena Environmental Restoration Network (SERN BC).
 
-Track version changes in [`NEWS.md`]('NEWS.md`)
+**Read the report:** <https://www.newgraphenvironment.com/fish_passage_fraser_2023_reporting/>
+&middot; **Source:** [`NewGraphEnvironment/fish_passage_fraser_2023_reporting`](https://github.com/NewGraphEnvironment/fish_passage_fraser_2023_reporting)
+&middot; **Version history:** [`NEWS.md`](NEWS.md)
 
+## What this is
 
-Adapted from a minimal example of a book based on R Markdown and **bookdown** (https://github.com/rstudio/bookdown). Please see the page "[Get Started](https://bookdown.org/yihui/bookdown/get-started.html)" at https://bookdown.org/yihui/bookdown/ for how to compile this example into HTML. More detailed instructions are available here https://bookdown.org/yihui/bookdown/build-the-book.html.
+The 2023 iteration of the Fraser Region fish-passage restoration-planning report. Assembles crossing-by-crossing assessments, fish-presence and habitat-confirmation data, and prioritization analyses across the region. Each prioritized barrier has a dedicated appendix with photos, field measurements, and recommended remediation; the executive summary rolls them up for partners and decision-makers. Source data and methods are open — anyone can rebuild the report from `scripts/run.R`.
 
-So if we want to use this repo to update specific files in existing repos generated from the template we need to can do the following from the production report.  NEED TO TEST A BUNCH.  See https://stackoverflow.com/questions/24815952/git-pull-from-another-repository:
+The 2025 iteration carries this work forward — see [`fish_passage_fraser_2025_reporting`](https://github.com/NewGraphEnvironment/fish_passage_fraser_2025_reporting).
 
-    git remote add upstream https://github.com/NewGraphEnvironment/mybookdown-template.git
-    git config remote.upstream.pushurl "maybe dont push to the template from here bud"
-    git fetch upstream
-    git checkout upstream/master -- path/to/file
-    
-    
-A better option is likely to use submodules http://blog.joncairns.com/2011/10/how-to-use-git-submodules/ but we will look into that next time
+## Sections
 
-In order to avoid commit huge files run this every once and a while https://stackoverflow.com/questions/4035779/gitignore-by-file-size
-https://stackoverflow.com/questions/37768376/remove-duplicate-lines-and-overwrite-file-in-same-command
+- **Executive Summary** ([`0050-executive-summary.Rmd`](0050-executive-summary.Rmd))
+- **Introduction** ([`0100-intro.Rmd`](0100-intro.Rmd))
+- **Background** ([`0200-background.Rmd`](0200-background.Rmd))
+- **Methods** ([`0300-methods.Rmd`](0300-methods.Rmd))
+- **Results** ([`0400-results.Rmd`](0400-results.Rmd))
+- **Recommendations** ([`0500-recommendations.Rmd`](0500-recommendations.Rmd))
+- **Appendices** ([`0600-appendix.Rmd`](0600-appendix.Rmd) + per-site `0800-appendix-*.Rmd` files) — site-specific data for each prioritized crossing.
 
-    find . -size +50M | sed 's|^\./||g' >> .gitignore; awk '!seen[$0]++' .gitignore | sponge .gitignore
-    
-    
-This is a common move to deal with repeated headers in pagedown knitr table outputs when the page breaks.  If we don't have an extra `<br>`
+## Build
 
-`r if(gitbook_on){knitr::asis_output("<br>")} else knitr::asis_output("\\pagebreak<br>")`
-    
+```r
+source("scripts/run.R")
+```
 
-   
+## License
+
+MIT (see [`LICENSE`](LICENSE)). Indigenous traditional knowledge shared with this work remains the cultural and intellectual property of the contributing Nations; sharing or republishing those contributions requires explicit consent.
