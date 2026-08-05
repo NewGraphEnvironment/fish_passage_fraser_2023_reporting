@@ -1,5 +1,8 @@
 # Changelog {-}
 
+### fish_passage_fraser_2023_reporting 0.1.3 (2026-08-04) {-}
+- Fix chunk with Sutherland Road UAV imagery
+
 ### fish_passage_fraser_2023_reporting 0.1.2 (2025-07-14) {-}
 - Update references for NuSeds.
 - use BT modelling for habitat gain index calculations as per https://github.com/NewGraphEnvironment/fish_passage_fraser_2023_reporting/issues/153
