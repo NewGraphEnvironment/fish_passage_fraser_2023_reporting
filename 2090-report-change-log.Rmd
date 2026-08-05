@@ -1,5 +1,9 @@
 # Changelog {-}
 
+### fish_passage_fraser_2023_reporting 0.1.3 (2026-08-04) {-}
+- Enable UAV orthomosaic viewer embed for PSCIS 199174 (Tributary to Nechako at Dog Creek Road settlement)
+- Update Kenneth Creek (PSCIS 199256) UAV viewer URLs to relocated imagery dataset (fraser/morkill) https://github.com/NewGraphEnvironment/fish_passage_fraser_2023_reporting/issues/160
+
 ### fish_passage_fraser_2023_reporting 0.1.2 (2025-07-14) {-}
 - Update references for NuSeds.
 - use BT modelling for habitat gain index calculations as per https://github.com/NewGraphEnvironment/fish_passage_fraser_2023_reporting/issues/153
