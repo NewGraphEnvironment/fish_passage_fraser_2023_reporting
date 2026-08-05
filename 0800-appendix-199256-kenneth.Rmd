@@ -93,12 +93,12 @@ fpr::fpr_table_bcfp(scroll = F)
 
 ## Aerial Imagery {.unnumbered}
 
-An aerial survey was conducted with a remotely piloted aircraft and the resulting imagery was processed into an orthomosaic available to view and download `r if(gitbook_on){knitr::asis_output("in Figure \\@ref(fig:uav-ortho-199256)")}else(knitr::asis_output("[here](https://viewer.a11s.one/?cog=https://imagery-uav-bc.s3.amazonaws.com/fraser/nechacko/2024/199256_kenneth_hwy16/odm_orthophoto/odm_orthophoto.tif)"))`.
+An aerial survey was conducted with a remotely piloted aircraft and the resulting imagery was processed into an orthomosaic available to view and download `r if(gitbook_on){knitr::asis_output("in Figure \\@ref(fig:uav-ortho-199256)")}else(knitr::asis_output("[here](https://viewer.a11s.one/?cog=https://imagery-uav-bc.s3.amazonaws.com/fraser/morkill/2024/199256_kenneth_hwy16/odm_orthophoto/odm_orthophoto.tif)"))`.
 
 <br>
 
 ```{r uav-ortho-199256-prep, eval = gitbook_on}
-viewer_url <- '<iframe src="https://viewer.a11s.one/?cog=https://imagery-uav-bc.s3.amazonaws.com/fraser/nechacko/2024/199256_kenneth_hwy16/odm_orthophoto/odm_orthophoto.tif" scrolling="no" title="UAV Viewer" width="100%" height="600" frameBorder="0"></iframe>'
+viewer_url <- '<iframe src="https://viewer.a11s.one/?cog=https://imagery-uav-bc.s3.amazonaws.com/fraser/morkill/2024/199256_kenneth_hwy16/odm_orthophoto/odm_orthophoto.tif" scrolling="no" title="UAV Viewer" width="100%" height="600" frameBorder="0"></iframe>'
 
 knitr::asis_output(viewer_url)
 ```
