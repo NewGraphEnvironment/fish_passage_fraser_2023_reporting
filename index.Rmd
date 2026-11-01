@@ -42,7 +42,7 @@ params:
 nocite: |
 
 documentclass: book
-bibliography: "`r rbbt::bbt_write_bib('references.bib', overwrite = TRUE)`"
+bibliography: "`r rbbt::bbt_write_bib('references.bib', overwrite = TRUE, filter = function(b) gsub('[[:space:]]+file = [{][^}]*[}],?', '', b))`"
 biblio-style: apalike
 link-citations: no
 description: "Restoring Fish Passage in the Fraser Region"
